@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   utils.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/11/16 13:17:02 by tcensier      #+#    #+#                 */
+/*   Updated: 2023/11/16 13:17:05 by tcensier      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philo.h"
 
 size_t	ft_strlen(const char *str)
@@ -32,3 +44,12 @@ long	ft_atoi(const char *nptr)
 	}
 	return (result * sign);
 }
+
+void	error_msg(char *msg, bool tutorial)
+{
+	printf(CERR "[ERROR]" CRESET);
+	if (msg)
+		printf(" %s", msg);
+	if (tutorial)
+		printf("./philo {N_PHILO} {TIME_TO_DEATH} {TIME_TO_EAT} {TIME_TO_SLEEP} {N_TIMES_TO_EAT}\n");
+}		

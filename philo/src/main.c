@@ -1,39 +1,51 @@
-// Args:
-// number_of_philosophers 	<= 200
-// time_to_die				>= 60ms
-// time_to_eat				>= 60ms
-// time_to_sleep			>= 60ms
-// number_of_times_each_philosopher_must_eat
-
-//FORMAT
-// timestamp_ms X has taken a fork
-// timestamp_ms X is eating
-// timestamp_ms X is sleeping
-// timestamp_ms X is thinking
-// timestamp_ms X died
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/11/16 13:16:40 by tcensier      #+#    #+#                 */
+/*   Updated: 2023/11/16 13:43:02 by tcensier      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/philo.h"
 
-bool arg_check(const char **av)
+static bool num_check(char *arg)
 {
-	if (ft_atoi(av[1]) > PHILO_MX || ft_atoi(av[1] <= 0))
-		return (write(2, "Invalid amount of Philosophers.\n", 33), false);
-	if (ft_atoi(av[2] < TIME_MIN))
-		return (write(2, "Invalid death time limit.\n", 27), false);
-	if (ft_atoi(av[3] < TIME_MIN))
-		return (write(2, "Invalid eat duration.\n", 23), false);
-	if (ft_atoi(av[4]) < TIME_MIN)
-		return (write(2, "Invalid sleep duration.\n", 25), false);
-	if (av[5] && (ft_atoi(av[5]) < 0))
-		return (write(2, "Invalid number of times philosophers must eat.\n", 48), false);
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] < '0' || arg[i] > '9')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+static bool arg_check(char **av)
+{
+	if (ft_atoi(av[1]) > PHILO_MX || ft_atoi(av[1]) <= 0 || !num_check(av[1]))
+		return (error_msg("Invalid amount of Philosophers. Input between 1 and 200\n", false), false);
+	if (ft_atoi(av[2]) < TIME_MIN || !num_check(av[2]))
+		return (error_msg("Invalid death time limit. Minimum = 60ms\n", false), false);
+	if (ft_atoi(av[3]) < TIME_MIN || !num_check(av[3]))
+		return (error_msg("Invalid eat duration. Minimum = 60ms\n", false), false);
+	if (ft_atoi(av[4]) < TIME_MIN || !num_check(av[4]))
+		return (error_msg("Invalid sleep duration. Minimum = 60ms\n", false), false);
+	if ((av[5] && (ft_atoi(av[5]) <= 0)) || !num_check(av[5]))
+		return (error_msg("Invalid number of times philosophers must eat. Minimum = 1\n", false), false);
 	return (true);
 }
 
 int main (int ac, char **av)
 {
-	if (ac != 5 || ac != 6)
-		return (write(2, "Invalid argument count. Please input 5 numerical arguments.\n", 61), EXIT_FAILURE);
+	if (ac != 5 && ac != 6)
+		return (error_msg("Invalid argument count.\n", true), EXIT_FAILURE);
 	if (!arg_check(av))
-		return (write(2, "Use:\n ./program {N_PHILO} {T_DEATH} {T_EAT} {T_SLEEP} {N_EAT_AMOUT}\n\t-N_PHILO <= 200\n\t-(T_DEATH, T_EAT, T_SLEEP) >= 60 (in ms)\n\t-N_EAT_AMOUT > 0 and optionnal\n", 160), EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
