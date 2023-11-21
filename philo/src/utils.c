@@ -6,7 +6,7 @@
 /*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/16 13:17:02 by tcensier      #+#    #+#                 */
-/*   Updated: 2023/11/16 13:17:05 by tcensier      ########   odam.nl         */
+/*   Updated: 2023/11/21 18:15:37 by tcensier      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,31 @@ long	ft_atoi(const char *nptr)
 	return (result * sign);
 }
 
+int	f_usleep(size_t ms)
+{
+	size_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < ms)
+		usleep(500);
+	return (0);
+}
+
+size_t	get_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		error_msg("Get time failed.\n", false);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
 void	error_msg(char *msg, bool tutorial)
 {
 	printf(CERR "[ERROR]" CRESET);
 	if (msg)
 		printf(" %s", msg);
 	if (tutorial)
-		printf("./philo {N_PHILO} {TIME_TO_DEATH} {TIME_TO_EAT} {TIME_TO_SLEEP} {N_TIMES_TO_EAT}\n");
-}		
+		printf("./philo {N_PHILO} {TIME_TO_DEATH} \
+		{TIME_TO_EAT} {TIME_TO_SLEEP} {N_TIMES_TO_EAT}\n");
+}

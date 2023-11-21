@@ -2,6 +2,10 @@ NAME		=	philo
 
 SRCS		=	./src/main.c \
 				./src/utils.c \
+				./src/init.c \
+				./src/threads.c \
+				./src/monitor.c \
+				./src/routines.c \
 
 OBJS		= 	$(SRCS:.c=.o)
 				
@@ -25,7 +29,7 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(D_FLAG) $(CFLAG) $(OBJS) -o $(NAME)
+	$(CC) $(D_FLAG) $(CFLAG) $(OBJS) -pthread -o $(NAME)
 	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 %.o: %.c

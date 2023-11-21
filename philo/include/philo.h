@@ -6,7 +6,7 @@
 /*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/16 13:16:52 by tcensier      #+#    #+#                 */
-/*   Updated: 2023/11/16 13:42:45 by tcensier      ########   odam.nl         */
+/*   Updated: 2023/11/21 18:15:54 by tcensier      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,7 @@
 # include <pthread.h>
 # include <stddef.h>
 # include <stdbool.h>
-
-typedef struct s_data
-{
-	bool				death_flag;
-	pthread_mutex_t		death_lock;
-	pthread_mutex_t		eat_lock;
-	pthread_mutex_t		think_lock;
-}						t_data;
+# include <sys/time.h>
 
 typedef struct s_philo
 {
@@ -43,37 +36,55 @@ typedef struct s_philo
 	int					meals_eaten;
 	int					n_philos;
 	int					n_eat;
-	bool				*dead;
-	bool				eating;
+	int					*dead;
+	int					eating;
 	size_t				last_meal;
 	size_t				t_die;
 	size_t				t_eat;
 	size_t				t_sleep;
-	size_t				t_start;
+	size_t				start_t;
 	pthread_mutex_t		*r_fork;
 	pthread_mutex_t		*l_fork;
-	pthread_mutex_t		*think_lock;
+	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*dead_lock;
 	pthread_mutex_t		*eat_lock;
 }						t_philo;
+
+typedef struct s_data
+{
+	int					death_flag;
+	int					n_philos;
+	pthread_mutex_t		death_lock;
+	pthread_mutex_t		eat_lock;
+	pthread_mutex_t		write_lock;
+	t_philo				*philos;
+}						t_data;
+
+//------ INIT -------//
+void	init_data(t_data *data, t_philo *philos);
+void	init_forks(pthread_mutex_t *forks, int n_philos);
+void	init_philos(t_philo *philos, t_data *data, \
+					pthread_mutex_t *forks, char **av);
+
+//------ MONITOR ----//
+void	*r_monitor(void *ptr);
+void	print_msg(char *str, t_philo *philo, int id);
+
+//------ THREADS ----//
+int		create_threads(t_data *data, pthread_mutex_t *forks);
+int		died_lock(t_philo *philo);
+void	destroy_threads(char *str, t_data *data, pthread_mutex_t *forks);
+
+//------ ROUTINES --//
+void	r_think(t_philo *philo);
+void	r_sleep(t_philo *philo);
+void	r_eat(t_philo *philo);
 
 //------ UTILS ------//
 size_t	ft_strlen(const char *str);
 long	ft_atoi(const char *nptr);
 void	error_msg(char *msg, bool tutorial);
+size_t	get_time(void);
+int		f_usleep(size_t ms);
 
 #endif
-
-// Args:
-// number_of_philosophers 	<= 200
-// time_to_die				>= 60ms
-// time_to_eat				>= 60ms
-// time_to_sleep			>= 60ms
-// number_of_times_each_philosopher_must_eat
-
-//FORMAT
-// timestamp_ms X has taken a fork
-// timestamp_ms X is eating
-// timestamp_ms X is sleeping
-// timestamp_ms X is thinking
-// timestamp_ms X died
