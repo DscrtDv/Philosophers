@@ -6,7 +6,7 @@
 /*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/16 13:17:02 by tcensier      #+#    #+#                 */
-/*   Updated: 2023/11/21 18:15:37 by tcensier      ########   odam.nl         */
+/*   Updated: 2023/12/04 16:54:50 by tcensier      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	f_usleep(size_t ms)
 
 	start = get_time();
 	while ((get_time() - start) < ms)
-		usleep(500);
+		usleep(ms / 10);
 	return (0);
 }
 

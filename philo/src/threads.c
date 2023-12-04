@@ -6,7 +6,7 @@
 /*   By: tcensier <tcensier@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/16 14:54:29 by tcensier      #+#    #+#                 */
-/*   Updated: 2023/11/21 18:15:43 by tcensier      ########   odam.nl         */
+/*   Updated: 2023/12/04 16:57:43 by tcensier      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ static void	*r_philo(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	if (philo->id % 2 == 0)
-		f_usleep(1);
 	while (!died_lock(philo))
 	{
 		r_eat(philo);

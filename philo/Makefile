@@ -10,7 +10,7 @@ SRCS		=	./src/main.c \
 OBJS		= 	$(SRCS:.c=.o)
 				
 	# Compiling Variables #
-CC			=	gcc
+CC			=	cc
 CFLAG		=	-Wall -Wextra -Werror
 RM			=	rm -f
 
@@ -21,15 +21,10 @@ RESET		=	\e[0m
 _SUCCESS	=	[$(GREEN)SUCCESS$(RESET)]
 _INFO		=	[$(YELLOW)INFO$(RESET)]
 
-	# Debugger #
-ifeq ($(DEBUG), 1)
-	D_FLAG	=	-g
-endif
-
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(D_FLAG) $(CFLAG) $(OBJS) -pthread -o $(NAME)
+	$(CC) -fsanitize=thread -g $(CFLAG) $(OBJS) -pthread -o $(NAME)
 	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 %.o: %.c
